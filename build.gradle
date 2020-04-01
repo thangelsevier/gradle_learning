@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id "org.springframework.boot" version "2.2.0.RELEASE"
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+}
+
+group = 'com.thangdtran.client'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.M3")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.2.0.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'org.json:json:20171018'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+springBoot {
+    mainClassName = 'com.thangdtran.client.Application'
+}
+
+bootRun {
+    main = 'com.thangdtran.client.Application'
+}
