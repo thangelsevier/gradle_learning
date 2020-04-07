@@ -28,7 +28,7 @@ public class ConfigController {
     @Value("${global.title}")
     private String title;
 
-    @GetMapping(path = "/configs", produces = "application/json")
+    @GetMapping(path = "/configs", produces = {"application/json"})
     public ResponseEntity<Object> getConfigs() {
 
         JSONObject jsonObject = new JSONObject();
